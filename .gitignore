@@ -218,3 +218,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Данные Docker-сервисов
+clickhouse_data/
+clickhouse_log/
+data/
+logs/

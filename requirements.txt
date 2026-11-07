@@ -1,0 +1,4 @@
+apache-airflow==2.11.1
+pandas==3.1.0
+apache-airflow-providers-amazon==9.20.0
+apache-airflow-providers-postgres==7.1.1

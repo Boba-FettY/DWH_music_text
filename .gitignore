@@ -221,6 +221,8 @@ __marimo__/
 
 # Данные Docker-сервисов
 clickhouse_data/
-clickhouse_log/
 data/
 logs/
+postgres_dwh_data/
+
+credentials.json

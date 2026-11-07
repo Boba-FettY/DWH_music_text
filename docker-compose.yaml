@@ -86,23 +86,18 @@ x-airflow-common:
       condition: service_healthy
 
 services:
-  clickhouse:
-    image: clickhouse/clickhouse-server:24.6
-    container_name: clickhouse-server
-    ports:
-      - "8123:8123"   # HTTP интерфейс (для запросов через curl/браузер)
-    volumes:
-      - ./clickhouse_data:/var/lib/clickhouse
-      - ./clickhouse_log:/var/log/clickhouse-server
+  postgres_dwh:
+    image: postgres:13
     environment:
-      - CLICKHOUSE_USER=click
-      - CLICKHOUSE_PASSWORD=click
-    ulimits:
-      nofile:
-        soft: 262144
-        hard: 262144
-    restart: unless-stopped
-  
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres_dwh_data:/var/lib/postgresql/data
+
   minio:
     image: pgsty/silo:RELEASE.2026-09-16T00-00-00Z
     restart: always
@@ -116,7 +111,6 @@ services:
       - "9000:9000"
       - "9001:9001"
 
-  # https://github.com/k0rsakov/pet_project_earthquake/pull/1
   metabase:
     image: metabase/metabase:v0.63.19.1
     container_name: metabase
@@ -130,6 +124,7 @@ services:
       POSTGRES_DB: airflow
     volumes:
       - postgres-db-volume:/var/lib/postgresql/data
+      - ./init-scripts/postgres:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "airflow"]
       interval: 10s

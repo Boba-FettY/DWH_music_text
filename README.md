@@ -15,4 +15,3 @@ docker compose up -d
 ## Остановка контейнеров
 ```
 docker compose down -v
-```

@@ -6,6 +6,7 @@ from airflow.providers.postgres.hooks.postgres import PostgresHook
 
 import requests
 from datetime import datetime
+from time import sleep
 import pandas as pd
 import json
 import io
@@ -27,6 +28,7 @@ SECRET_KEY = Variable.get("secretKey")
 
 ARTIST_ID = 292138099 # Макс Корж - 594629011, Noize MC - 292138099, Anacondaz - 573799679
 SEARCH_URL = "https://itunes.apple.com/lookup"
+
 
 def extract_artist_album_names(**context):
     
@@ -97,10 +99,9 @@ def transform_artist_album_names(**context):
             })
             
 
-            
-
     albums_sorted = sorted(albums, key=lambda x: x['release_date'], reverse=True)
     data_frame = pd.DataFrame(albums_sorted)
+    
     data_frame.insert(0, 'singer_id', '1')
 
     csv_buffer = io.StringIO()
@@ -115,6 +116,7 @@ def transform_artist_album_names(**context):
         replace=True,
     )
     
+
 def load_to_postgres_artist_album_names(**context):
     
     start_date = context['ds']
@@ -149,8 +151,6 @@ def load_to_postgres_artist_album_names(**context):
 
 with DAG(
     dag_id=DAG_ID,
-    start_date=datetime(2026, 11, 3),
-    schedule_interval='0 5 * * *',
     max_active_runs=1,
 ) as dag:
     

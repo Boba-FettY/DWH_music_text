@@ -16,8 +16,10 @@ CREATE TABLE IF NOT EXISTS dwh.releases (
     track_count INT,
     release_date DATE,
     release_type VARCHAR(50),
-    release_api_id VARCHAR(100) UNIQUE NOT NULL
+    release_api_id VARCHAR(100) NOT NULL
 );
+
+ALTER TABLE dwh.releases ADD CONSTRAINT releases_business_key UNIQUE (release_name, release_type, singer_id);
 
 -- Треки
 CREATE TABLE IF NOT EXISTS dwh.tracks (
@@ -26,5 +28,6 @@ CREATE TABLE IF NOT EXISTS dwh.tracks (
     track_name VARCHAR(255) NOT NULL,
     track_number INT,
     duration INT, -- Длительность в секундах
-    track_api_id VARCHAR(100) UNIQUE NOT NULL
+    track_api_id VARCHAR(100) NOT NULL
 );
+
